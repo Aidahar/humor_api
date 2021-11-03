@@ -1,9 +1,11 @@
 package humor_api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
@@ -52,16 +54,31 @@ func (c Client) GetJoke() (Joke, error) {
 
 func (c Client) Upvote(id int) (Vote, error) {
 	url := fmt.Sprintf("%s?api-key=%s/%d/upvote", c.BaseURL, c.apiKey, id)
-    resp, err := c.HTTPClient.Post(url)
-    if err != nil {
-        return Vote, err
-    }
-    defer resp.Body.Close()
 
-    var voteData Vote
-    if err := json.Unmarshal(body, &voteData); err != nil {
-        return Vote, err
-    }
+	jsonData, err := json.Marshal(map[string]int{
+		"id": id,
+	})
 
-    return voteData, nil
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return Vote{}, err
+	}
+
+	var voteData Vote
+	if err := json.Unmarshal(body, &voteData); err != nil {
+		return Vote{}, err
+	}
+
+	return voteData, nil
 }

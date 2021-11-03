@@ -7,10 +7,14 @@ type Joke struct {
 	Joke string `json:"joke"`
 }
 
-type Upvote struct {
-    Vote string
+type Vote struct {
+	Vote string `json:"id"`
 }
 
 func (j Joke) Info() string {
 	return fmt.Sprintf("[Id] %d | [Joke] %s\n", j.Id, j.Joke)
+}
+
+func (v Vote) Info() string {
+	return fmt.Sprintf("%s", v.Vote)
 }
