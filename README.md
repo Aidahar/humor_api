@@ -1,6 +1,11 @@
 # humor_api
 Simple SDK for get random joke from https://api.humorapi.com 
 
+# How to use
+```
+go get github.com/Aidahar/humor_api
+```
+
 # Example
 
 ```
