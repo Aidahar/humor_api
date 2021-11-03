@@ -49,3 +49,19 @@ func (c Client) GetJoke() (Joke, error) {
 	}
 	return jokeData, nil
 }
+
+func (c Client) Upvote(id int) (Vote, error) {
+	url := fmt.Sprintf("%s?api-key=%s/%d/upvote", c.BaseURL, c.apiKey, id)
+    resp, err := c.HTTPClient.Post(url)
+    if err != nil {
+        return Vote, err
+    }
+    defer resp.Body.Close()
+
+    var voteData Vote
+    if err := json.Unmarshal(body, &voteData); err != nil {
+        return Vote, err
+    }
+
+    return voteData, nil
+}
