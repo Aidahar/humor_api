@@ -1,7 +1,6 @@
 package humor_api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,7 +10,7 @@ import (
 )
 
 const (
-	BaseURLV1 = "https://api.humorapi.com/jokes/random"
+	BaseURLV1 = "https://api.humorapi.com/jokes/"
 )
 
 type Client struct {
@@ -31,7 +30,7 @@ func NewClient(apiKey string) (*Client, error) {
 }
 
 func (c Client) GetJoke() (Joke, error) {
-	url := fmt.Sprintf("%s?api-key=%s", c.BaseURL, c.apiKey)
+	url := fmt.Sprintf("%srandom?api-key=%s", c.BaseURL, c.apiKey)
 	resp, err := c.HTTPClient.Get(url)
 	if err != nil {
 		return Joke{}, err
@@ -53,16 +52,9 @@ func (c Client) GetJoke() (Joke, error) {
 }
 
 func (c Client) Upvote(id int) (Vote, error) {
-	url := fmt.Sprintf("%s?api-key=%s/%d/upvote", c.BaseURL, c.apiKey, id)
+	url := fmt.Sprintf("%s/%d/upvote?api-key=%s", c.BaseURL, id, c.apiKey)
 
-	jsonData, err := json.Marshal(map[string]int{
-		"id": id,
-	})
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(url, "application/json", nil)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -8,7 +8,7 @@ type Joke struct {
 }
 
 type Vote struct {
-	Vote string `json:"id"`
+	Vote string `json:"message"`
 }
 
 func (j Joke) Info() string {
