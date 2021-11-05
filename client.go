@@ -10,28 +10,28 @@ import (
 )
 
 const (
-	BaseURLV1 = "https://api.humorapi.com/jokes/"
+	BASE_URL_V1 = "https://api.humorapi.com/jokes/"
 )
 
 type Client struct {
-	BaseURL    string
+	baseURL    string
 	apiKey     string
-	HTTPClient *http.Client
+	httpClient *http.Client
 }
 
 func NewClient(apiKey string) (*Client, error) {
 	return &Client{
-		BaseURL: BaseURLV1,
+		baseURL: BASE_URL_V1,
 		apiKey:  apiKey,
-		HTTPClient: &http.Client{
+		httpClient: &http.Client{
 			Timeout: time.Minute,
 		},
 	}, nil
 }
 
 func (c Client) GetJoke() (Joke, error) {
-	url := fmt.Sprintf("%srandom?api-key=%s", c.BaseURL, c.apiKey)
-	resp, err := c.HTTPClient.Get(url)
+	url := fmt.Sprintf("%srandom?api-key=%s", c.baseURL, c.apiKey)
+	resp, err := c.httpClient.Get(url)
 	if err != nil {
 		return Joke{}, err
 	}
@@ -52,7 +52,7 @@ func (c Client) GetJoke() (Joke, error) {
 }
 
 func (c Client) Upvote(id int) (Vote, error) {
-	url := fmt.Sprintf("%s/%d/upvote?api-key=%s", c.BaseURL, id, c.apiKey)
+	url := fmt.Sprintf("%s/%d/upvote?api-key=%s", c.baseURL, id, c.apiKey)
 
 	resp, err := http.Post(url, "application/json", nil)
 	if err != nil {
